@@ -1,0 +1,73 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-image: url("./trees-background.jpg");
+    background-position: center;
+}
+
+
+nav {
+    padding: 1em 0em;
+    background-color: #18662a;
+    color: white;
+    border-style: dotted;
+    border-width: 5px;
+    border-radius: 10px;
+    border-color: #0e3a18;
+    width: 60%;
+}
+
+#game-grid-container {
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 10px;
+    border-color: #0e3a18;
+    color: white;
+    background-color: #28a745;
+    width: fit-content;
+    display: grid;
+}
+
+/* .cell {
+    display: block;
+    max-width: 100%;
+    height: auto;
+} */
+
+@media (max-width: 768px) { 
+    #game-grid-container {
+        grid-template-columns: repeat(10, 50px);
+        grid-template-rows: repeat(10, 50px);
+    }
+}
+
+@media (max-width: 576px) { 
+    #game-grid-container {
+        grid-template-columns: repeat(10, 40px);
+        grid-template-rows: repeat(10, 40px);
+    }
+}
+
+@media (max-width: 420px) { 
+    #game-grid-container {
+        grid-template-columns: repeat(10, 30px);
+        grid-template-rows: repeat(10, 30px);
+    }
+
+}
+
+@media (max-width: 300px) { 
+    #game-grid-container {
+        grid-template-columns: repeat(10, 22px);
+        grid-template-rows: repeat(10, 30px);
+    }
+
+}
