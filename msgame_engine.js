@@ -1,3 +1,4 @@
+// By prof. Pavol Federl
 "use strict";
 
 let MSGame = (function(){
