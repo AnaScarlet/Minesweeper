@@ -6,6 +6,8 @@ let main = function (){
 
     let gameEngine;
 
+    let flagCount;
+
     $("#button-level-easy").on("click", setLevelToEasy);
 
     function setLevelToEasy() {
@@ -33,23 +35,6 @@ let main = function (){
     $("#start-button").on("click", function () {
         gameEngine = new MSGame();
         gameEngine.init(gridSizeRows, gridSizeCols, Math.floor(gridSizeRows * gridSizeCols / 3));
-        // console.log(gameEngine.getRendering().join("\n"));
-        // console.log(gameEngine.getStatus());
-    
-        // gameEngine.uncover(2,5);
-        // console.log(gameEngine.getRendering().join("\n"));
-        // console.log(gameEngine.getStatus());
-    
-        // gameEngine.uncover(5,5);
-        // console.log(gameEngine.getRendering().join("\n"));
-        // console.log(gameEngine.getStatus());
-    
-        // gameEngine.mark(4,5);
-        // console.log(gameEngine.getRendering().join("\n"));
-        // console.log(gameEngine.getStatus());
-    
-        // console.log("end");
-
         
         $("#start-button").hide();
         $("#restart-button").show();
@@ -59,6 +44,9 @@ let main = function (){
     $("#restart-button").on("click", resetGame);
 
     function resetGame() {
+        flagCount = gridSizeRows * gridSizeCols;
+        updateFlagCountView();
+
         $("#game-grid-container > .badge").remove();
         setGridSize();
         drawGridCellsShown();
@@ -94,12 +82,19 @@ let main = function (){
                 let currentCss = {
                     gridRow: `${j} / ${j+1}`, 
                     gridColumn: `${i} / ${i+1}`,
-                    backgroundImage: "url('green-grass.png')"
+                    backgroundImage: "url('green-grass.png')",
+                    padding: "0px"
                 };
-                let currentCellElement = $(`#${currentId}`);
-                currentCellElement.css(currentCss);
-                let data = {elementIdSelector: `#${currentId}`, elementColumn: j, elementRow: i};
-                currentCellElement.bind("click", data, cellClickHandler);
+                //let currentCellElement = $(`#${currentId}`);
+                $(`#${currentId}`).css(currentCss);
+                let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
+                let hammertime = new Hammer(document.getElementById(`${currentId}`));
+                hammertime.on("tap", (ev) => {
+                    cellClickHandler(data);
+                });
+                hammertime.on("press", (ev) => {
+                    placeFlagHandler(data);
+                });
             }
             
         }
@@ -119,30 +114,70 @@ let main = function (){
                 let currentCss = {
                     gridRow: `${j} / ${j+1}`, 
                     gridColumn: `${i} / ${i+1}`,
-                    backgroundImage: "url('green-grass.png')"
+                    backgroundImage: "url('green-grass.png')",
+                    padding: "0px"
                 };
                 let currentCellElement = $(`#${currentId}`);
                 currentCellElement.css(currentCss);
-                let data = {elementIdSelector: `#${currentId}`, elementColumn: j, elementRow: i};
-                currentCellElement.bind("click", data, cellClickHandler);
+                let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
+                let hammertime = new Hammer(document.getElementById(`${currentId}`));
+                hammertime.on("tap", (ev) => {
+                    cellClickHandler(data);
+                });
+                hammertime.on("press", (ev) => {
+                    placeFlagHandler(data);
+                });
             }
             
         }
     
         $("nav").css("width", $("#game-grid-container").css("width") );
     }
+
     
-    function cellClickHandler(event) {
-        let elemId = event.data.elementIdSelector;
-        let elemCol = event.data.elementColumn;
-        let elemRow = event.data.elementRow;
+    function placeFlagHandler(data) {
+        let elemId = data.elementIdSelector;
+        let elemCol = data.elementColumn;
+        let elemRow = data.elementRow;
     
         console.log(elemId);
 
-        if (gameEngine.uncover(elemRow-1, elemCol-1) === false){
+        if (elemId === "#") {  // This happens when user clicks on a bootstrap badge (number) on an uncovered cell
+            return;
+        }
+
+        if (gameEngine.mark(elemRow, elemCol)) {
+            if ($(elemId).children().length === 0) {
+                // Put down flag and decrement flag count
+                $(elemId).append("<img class='flag' src='icons8-flag.png'>");
+                $(".flag").css({width: "52px", height: "auto"});
+                flagCount--;
+            }
+            else {
+                // remove existing flag and increment flag count
+                $(elemId).empty();
+                flagCount++;
+            }
+            updateFlagCountView();
+        }
+        
+    }
+
+    function updateFlagCountView() {
+        $("#num-flags").text(flagCount);
+    }
+
+    function cellClickHandler(data) {
+        let elemId = data.elementIdSelector;
+        let elemCol = data.elementColumn;
+        let elemRow = data.elementRow;
+
+        console.log(`In cellClickHandler. data object:\n { ${elemId}, ${elemCol}, ${elemRow}`);
+
+        if (gameEngine.uncover(elemRow, elemCol) === false){
             console.log("Uncovering failed");
             console.log(gameEngine.getStatus());
-            return;
+            return false;
         }
 
         let status = gameEngine.getStatus();
@@ -159,7 +194,7 @@ let main = function (){
                     $("#game-grid-container > button").attr("disabled", true);
                 });
             });
-            return;
+            return false;
         }
 
         let renderingStatus = gameEngine.getRendering();
@@ -168,8 +203,10 @@ let main = function (){
         if (status.done) {
             console.log("You win!!!");
             $("#game-grid-container > button").attr("disabled", true);
-            return;
+            return false;
         }
+
+        return false;
     }
 
     function drawGridStatus(renderingStatusObject) {
@@ -232,7 +269,7 @@ let main = function (){
             resolve(val);
           }, delay);
         });
-      }
+    }
       
 }
 
