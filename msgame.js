@@ -20,6 +20,7 @@ let main = function (){
         gridSizeRows = 6;
         gridSizeCols = 6;
 
+        $("#game-grid-container").attr("class", "large-grid-easy-level medium-grid-easy-level small-grid-easy-level extra-small-grid-easy-level tiny-small-grid-easy-level");
         resetGame();
     }
 
@@ -27,6 +28,7 @@ let main = function (){
         gridSizeRows = 10;
         gridSizeCols = 8;
 
+        $("#game-grid-container").attr("class", "large-grid-hard-level medium-grid-hard-level small-grid-hard-level extra-small-grid-hard-level tiny-small-grid-hard-level");
         resetGame();
     });
     
@@ -61,7 +63,6 @@ let main = function (){
         delay(1500);
 
         $("#game-grid-container > .badge").remove();
-        setGridSize();
         drawGridCellsShown();
         gameEngine = new MSGame();
         gameEngine.init(gridSizeRows, gridSizeCols, numBombs());
@@ -69,7 +70,6 @@ let main = function (){
     }
 
     function drawGrid() {
-        setGridSize();
         drawGridCellsHidden();
     }
 
@@ -112,21 +112,10 @@ let main = function (){
 
     function stopTimer() {
         if (timer) {
-            //$("#timer").text("000");
             window.clearInterval(timer);
         }
     }
 
-    function setGridSize() {
-        console.log(`size = ${gridSizeRows} x ${gridSizeCols}`);
-        let css = {
-            gridTemplateColumns: `repeat(${gridSizeRows}, 64px)`,
-            gridTemplateRows: `repeat(${gridSizeCols}, 64px)`,
-            rowGap: '3px',
-            columnGap: '3px'
-        }
-        $("#game-grid-container").css(css);
-    }
     
     function drawGridCellsHidden() {
         console.log("Draw cells Hidden called");
@@ -143,7 +132,6 @@ let main = function (){
                     backgroundImage: "url('green-grass.png')",
                     padding: "0px"
                 };
-                //let currentCellElement = $(`#${currentId}`);
                 $(`#${currentId}`).css(currentCss);
                 let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
                 let hammertime = new Hammer(document.getElementById(`${currentId}`));
@@ -178,8 +166,7 @@ let main = function (){
                     backgroundImage: "url('green-grass.png')",
                     padding: "0px"
                 };
-                let currentCellElement = $(`#${currentId}`);
-                currentCellElement.css(currentCss);
+                $(`#${currentId}`).css(currentCss);
                 let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
                 let hammertime = new Hammer(document.getElementById(`${currentId}`));
                 let tapCallback = (ev) =>{
@@ -213,8 +200,7 @@ let main = function (){
         if (gameEngine.mark(elemRow, elemCol)) {
             if ($(elemId).children().length === 0) {
                 // Put down flag and decrement flag count
-                $(elemId).append("<img class='flag' src='icons8-flag.png'>");
-                $(".flag").css({width: "52px", height: "auto"});
+                $(elemId).append("<img class='flag-img' src='icons8-flag.png'>");
                 flagCount--;
             }
             else {
@@ -246,12 +232,18 @@ let main = function (){
 
         let status = gameEngine.getStatus();
         if (status.exploded) {
-            $(elemId).css({backgroundImage: "url('icons8-bomb.png')"});
+            $(elemId).css({
+                backgroundImage: "url('icons8-bomb.png')",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundSize: "contain"
+            });
             delay(300).then(() => {
                 $(elemId).css({
                     backgroundImage: "url('icons8-explosion.png')", 
                     backgroundRepeat: "no-repeat",
-                    backgroundPosition: "center"
+                    backgroundPosition: "center",
+                    backgroundSize: "contain"
                 });
                 delay(200).then(() => {
                     gameOver();
@@ -273,22 +265,34 @@ let main = function (){
     }
 
     function drawGridStatus(renderingStatusObject) {
-        let flag = "<img class='flag-img' src='icons8-flag.png'>";
-        let one = "<h3><span class='badge badge-secondary border'>1</span></h3>";
-        let two = "<h3><span class='badge badge-primary border'>2</span></h3>";
-        let three = "<h3><span class='badge badge-warning border'>3</span></h3>";
-        let four = "<h3><span class='badge badge-danger border'>4</span></h3>";
-        let fivePlus = function (number) {
-            return `<h3><span class='badge badge-danger border'>${number}</span></h3>`;
+        let isMobile = window.matchMedia("(max-width: 421px)").matches || window.matchMedia("(max-width: 321px)").matches;
+        if (isMobile){
+            var one = "<h5><span class='badge badge-secondary border'>1</span></h5>";
+            var two = "<h5><span class='badge badge-primary border'>2</span></h5>";
+            var three = "<h5><span class='badge badge-warning border'>3</span></h5>";
+            var four = "<h5><span class='badge badge-danger border'>4</span></h5>";
+            var fivePlus = function (number) {
+                return `<h5><span class='badge badge-danger border'>${number}</span></h5>`;
+            }
         }
+        else {
+            var one = "<h3><span class='badge badge-secondary border'>1</span></h3>";
+            var two = "<h3><span class='badge badge-primary border'>2</span></h3>";
+            var three = "<h3><span class='badge badge-warning border'>3</span></h3>";
+            var four = "<h3><span class='badge badge-danger border'>4</span></h3>";
+            var fivePlus = function (number) {
+                return `<h3><span class='badge badge-danger border'>${number}</span></h3>`;
+            }
+        }
+
+        let flag = "<img class='flag-img' src='icons8-flag.png'>";
+        
 
         for (let row = 0; row < gridSizeRows; row++) {
             for (let col = 0; col < gridSizeCols; col++) {
                 let currentCell = $(`#cell${row+1}${col+1}`);
-                //console.log("Tile: \n id = " + `#cell${row}${col}`);
 
                 let tileStatus = renderingStatusObject[row].charAt(col);
-                //console.log(" status = " + tileStatus);
 
                 if (tileStatus == "H") { continue; }
                 if (tileStatus === "M") {

@@ -36,38 +36,97 @@ nav {
     display: grid;
 }
 
-/* .cell {
-    display: block;
-    max-width: 100%;
-    height: auto;
-} */
+.large-grid-easy-level {
+    grid-template-columns: repeat(6, 64px);
+    grid-template-rows: repeat(6, 64px);
+    row-gap: 3px;
+    column-gap: 3px;
+}
+
+.large-grid-hard-level {
+    grid-template-columns: repeat(10, 64px);
+    grid-template-rows: repeat(8, 64px);
+    row-gap: 3px;
+    column-gap: 3px;
+}
+
+.flag-img {
+    max-width: 52px;
+    max-height: auto;
+}
+
 
 @media (max-width: 768px) { 
-    #game-grid-container {
-        grid-template-columns: repeat(10, 50px);
-        grid-template-rows: repeat(10, 50px);
+    .medium-grid-easy-level {
+        grid-template-columns: repeat(6, 60px);
+        grid-template-rows: repeat(6, 60px);
+    }
+    .medium-grid-hard-level {
+        grid-template-columns: repeat(10, 54px);
+        grid-template-rows: repeat(8, 54px);
+    }
+
+    .flag-img {
+        max-width: 50px;
+        max-height: auto;
     }
 }
 
 @media (max-width: 576px) { 
-    #game-grid-container {
-        grid-template-columns: repeat(10, 40px);
-        grid-template-rows: repeat(10, 40px);
+    .small-grid-easy-level {
+        grid-template-columns: repeat(6, 54px);
+        grid-template-rows: repeat(6, 54px);
+    }
+    .small-grid-hard-level {
+        grid-template-columns: repeat(10, 38px);
+        grid-template-rows: repeat(8, 38px);
+    }
+
+    .flag-img {
+        max-width: 30px;
+        max-height: auto;
     }
 }
 
-@media (max-width: 420px) { 
-    #game-grid-container {
+@media (max-width: 421px) { 
+    .extra-small-grid-easy-level {
+        grid-template-columns: repeat(6, 40px);
+        grid-template-rows: repeat(6, 40px);
+        row-gap: 2px;
+        column-gap: 2px;
+    }
+
+    .extra-small-grid-hard-level {
         grid-template-columns: repeat(10, 30px);
-        grid-template-rows: repeat(10, 30px);
+        grid-template-rows: repeat(8, 30px);
+        row-gap: 2px;
+        column-gap: 2px;
     }
 
+    h3, h3 span {
+        max-width: 15px;
+        max-height: 15px;
+    }
+
+    .flag-img {
+        max-width: 20px;
+        max-height: auto;
+    }
 }
 
-@media (max-width: 300px) { 
-    #game-grid-container {
-        grid-template-columns: repeat(10, 22px);
-        grid-template-rows: repeat(10, 30px);
+@media (max-width: 321px) { 
+    .tiny-small-grid-easy-level {
+        grid-template-columns: repeat(6, 30px);
+        grid-template-rows: repeat(6, 30px);
+        row-gap: 1px;
+        column-gap: 1px;
+    }
+
+    .tiny-small-grid-hard-level {
+        grid-template-columns: repeat(10, 24px);
+        grid-template-rows: repeat(8, 24px);
+        row-gap: 1px;
+        column-gap: 1px;
     }
 
 }
