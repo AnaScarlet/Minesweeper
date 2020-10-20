@@ -3,10 +3,16 @@
 let main = function (){
     let gridSizeRows;
     let gridSizeCols;
+    let numBombs = () => {
+        return Math.floor(gridSizeRows * gridSizeCols / 3);
+    };
 
     let gameEngine;
 
     let flagCount;
+    let timer;
+
+    let gridIdToCallbackArray = [];
 
     $("#button-level-easy").on("click", setLevelToEasy);
 
@@ -26,15 +32,20 @@ let main = function (){
     
     $( window ).on("load", function loadScreen() {
         console.log("window loaded");
-        $("#restart-button").hide();
+        $("#restart-button").hide();        
     
-        setLevelToEasy();
+        gridSizeRows = 6;
+        gridSizeCols = 6;
+        flagCount = numBombs();
+        updateFlagCountView();
+
         drawGrid();
     });
 
     $("#start-button").on("click", function () {
         gameEngine = new MSGame();
-        gameEngine.init(gridSizeRows, gridSizeCols, Math.floor(gridSizeRows * gridSizeCols / 3));
+        gameEngine.init(gridSizeRows, gridSizeCols, numBombs());
+        startTimer();
         
         $("#start-button").hide();
         $("#restart-button").show();
@@ -44,19 +55,66 @@ let main = function (){
     $("#restart-button").on("click", resetGame);
 
     function resetGame() {
-        flagCount = gridSizeRows * gridSizeCols;
+        flagCount = numBombs();
         updateFlagCountView();
+        stopTimer();
+        delay(1500);
 
         $("#game-grid-container > .badge").remove();
         setGridSize();
         drawGridCellsShown();
         gameEngine = new MSGame();
-        gameEngine.init(gridSizeRows, gridSizeCols, Math.floor(gridSizeRows * gridSizeCols / 3));
+        gameEngine.init(gridSizeRows, gridSizeCols, numBombs());
+        startTimer();
     }
 
     function drawGrid() {
         setGridSize();
         drawGridCellsHidden();
+    }
+
+    function gameOver(){
+        $("#losing-time-result").text( $("#timer").text() );
+        $("#losing-flags-final").text( numBombs() - flagCount );
+        stopTimer();
+        disableGridButtons();
+        let options = {focus : true, show: true};
+        $("#game-over-modal").modal(options);   
+    }
+
+    function gameWon() {
+        $("#winning-time-result").text( $("#timer").text() );
+        $("#winning-flags-final").text( numBombs() - flagCount );
+        stopTimer();
+        disableGridButtons();
+        let options = {focus : true, show: true};
+        $("#winning-modal").modal(options);
+    }
+
+    function disableGridButtons() {
+        $("#game-grid-container > button").attr("disabled", true); // doesn't work to stop registering clicks
+        gridIdToCallbackArray.forEach( (obj) => {
+            let hammertime = obj.hammer;
+            hammertime.off("tap", obj.tapEventCallback);
+            hammertime.off("press", obj.pressEventCallback);
+        });
+    }
+
+    function startTimer() {
+        console.log("Starting the timer");
+        let t = 0;
+        timer = setInterval(function () {
+            t++;
+            let newText = ("000" + t).substr(-3);
+            $("#timer").text(newText);
+        }, 1000)
+    }
+
+    function stopTimer() {
+        if (timer) {
+            //$("#timer").text("000");
+            window.clearInterval(timer);
+        }
     }
 
     function setGridSize() {
@@ -89,12 +147,15 @@ let main = function (){
                 $(`#${currentId}`).css(currentCss);
                 let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
                 let hammertime = new Hammer(document.getElementById(`${currentId}`));
-                hammertime.on("tap", (ev) => {
+                let tapCallback = (ev) =>{
                     cellClickHandler(data);
-                });
-                hammertime.on("press", (ev) => {
+                }
+                let pressCallback = (ev) => {
                     placeFlagHandler(data);
-                });
+                }
+                hammertime.on("tap", tapCallback);
+                hammertime.on("press", pressCallback);
+                gridIdToCallbackArray.push({id: "currentId",  hammer: hammertime, tapEventCallback: tapCallback, pressEventCallback: pressCallback});
             }
             
         }
@@ -121,12 +182,15 @@ let main = function (){
                 currentCellElement.css(currentCss);
                 let data = {elementIdSelector: `#${currentId}`, elementColumn: j-1, elementRow: i-1};
                 let hammertime = new Hammer(document.getElementById(`${currentId}`));
-                hammertime.on("tap", (ev) => {
+                let tapCallback = (ev) =>{
                     cellClickHandler(data);
-                });
-                hammertime.on("press", (ev) => {
+                }
+                let pressCallback = (ev) => {
                     placeFlagHandler(data);
-                });
+                }
+                hammertime.on("tap", tapCallback);
+                hammertime.on("press", pressCallback);
+                gridIdToCallbackArray.push({id: "currentId", hammer: hammertime, tapEventCallback: tapCallback, pressEventCallback: pressCallback});
             }
             
         }
@@ -190,8 +254,8 @@ let main = function (){
                     backgroundPosition: "center"
                 });
                 delay(200).then(() => {
-                    console.log("Game over!");
-                    $("#game-grid-container > button").attr("disabled", true);
+                    gameOver();
+                    
                 });
             });
             return false;
@@ -201,8 +265,7 @@ let main = function (){
         drawGridStatus(renderingStatus);    
         
         if (status.done) {
-            console.log("You win!!!");
-            $("#game-grid-container > button").attr("disabled", true);
+            gameWon();
             return false;
         }
 
