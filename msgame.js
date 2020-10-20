@@ -33,7 +33,6 @@ let main = function (){
     });
     
     $( window ).on("load", function loadScreen() {
-        console.log("window loaded");
         $("#restart-button").hide();        
     
         gridSizeRows = 6;
@@ -78,8 +77,10 @@ let main = function (){
         $("#losing-flags-final").text( numBombs() - flagCount );
         stopTimer();
         disableGridButtons();
-        let options = {focus : true, show: true};
-        $("#game-over-modal").modal(options);   
+        delay(700).then(() => {
+            let options = {focus : true, show: true};
+            $("#game-over-modal").modal(options); 
+        }); 
     }
 
     function gameWon() {
@@ -87,8 +88,10 @@ let main = function (){
         $("#winning-flags-final").text( numBombs() - flagCount );
         stopTimer();
         disableGridButtons();
-        let options = {focus : true, show: true};
-        $("#winning-modal").modal(options);
+        delay(1300).then(() => {
+            let options = {focus : true, show: true};
+            $("#winning-modal").modal(options); 
+        });        
     }
 
     function disableGridButtons() {
@@ -101,7 +104,6 @@ let main = function (){
     }
 
     function startTimer() {
-        console.log("Starting the timer");
         let t = 0;
         timer = setInterval(function () {
             t++;
@@ -118,7 +120,7 @@ let main = function (){
 
     
     function drawGridCellsHidden() {
-        console.log("Draw cells Hidden called");
+        //console.log("Draw cells Hidden called");
         $("#game-grid-container").empty();
         for (let i=1; i <= gridSizeRows; i++){
             for (let j=1; j <= gridSizeCols; j++) {
@@ -152,7 +154,7 @@ let main = function (){
     }
 
     function drawGridCellsShown() {
-        console.log("Draw cells Shown called");
+        //console.log("Draw cells Shown called");
         $("#game-grid-container").empty();
         for (let i=1; i <= gridSizeRows; i++){
             for (let j=1; j <= gridSizeCols; j++) {
@@ -191,8 +193,6 @@ let main = function (){
         let elemCol = data.elementColumn;
         let elemRow = data.elementRow;
     
-        console.log(elemId);
-
         if (elemId === "#") {  // This happens when user clicks on a bootstrap badge (number) on an uncovered cell
             return;
         }
@@ -221,8 +221,6 @@ let main = function (){
         let elemId = data.elementIdSelector;
         let elemCol = data.elementColumn;
         let elemRow = data.elementRow;
-
-        console.log(`In cellClickHandler. data object:\n { ${elemId}, ${elemCol}, ${elemRow}`);
 
         if (gameEngine.uncover(elemRow, elemCol) === false){
             console.log("Uncovering failed");
