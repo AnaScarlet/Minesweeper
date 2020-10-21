@@ -33,7 +33,7 @@ let main = function (){
     });
     
     $( window ).on("load", function loadScreen() {
-        $("#restart-button").hide();        
+        $("#restart-button").hide();
     
         gridSizeRows = 6;
         gridSizeCols = 6;
@@ -41,6 +41,13 @@ let main = function (){
         updateFlagCountView();
 
         drawGrid();
+
+        window.oncontextmenu = function(event) {
+            console.log("Caught context menu");
+            event.preventDefault();
+            event.stopPropagation();
+            return false;
+       };
     });
 
     $("#start-button").on("click", function () {
