@@ -42,6 +42,7 @@ let main = function (){
 
         drawGrid();
 
+        // From https://stackoverflow.com/questions/3413683/disabling-the-context-menu-on-long-taps-on-android
         window.oncontextmenu = function(event) {
             console.log("Caught context menu");
             event.preventDefault();
