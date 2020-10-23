@@ -14,28 +14,24 @@
 
   </head>
   <body>
-    <nav class="nav nav-pills justify-content-center">
-      <div class="dropdown">
-        <button class="nav-item btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Level
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button id="button-level-easy" class="dropdown-item btn-success">Easy</button>
-          <button id="button-level-hard" class="dropdown-item btn-success">Hard</button>
-        </div>
+    <nav class="navbar navbar-expand-md navbar-light d-flex justify-content-center flex-nowrap">
+      <div class="dropdown nav-item">
+        <a class="nav-link dropdown-toggle btn btn-success" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Level</a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <li class="nav-item active"><a id="button-level-easy" class="dropdown-item btn-success">Easy</a>
+          <li class="nav-item"><a id="button-level-hard" class="dropdown-item btn-success">Hard</a>
+        </ul>
       </div>
-      <div class="nav-item"> 
-        <div class="nav-link">
-          Flags: <span id="num-flags">1</span>
-        </div>
+      <div class="navbar-brand">
+        <img src="icons8-flag.png" alt="Flags:"  >
+        <span class="navbar-text text-light" id="num-flags">1</span>
       </div>
-      <div class="nav-item"> 
-        <div class="nav-link">
-          Time: <span id="timer">000</span>
-        </div>
+      <div class="navbar-brand">
+        <img src="./icons8-timer.png" alt="Time:"  style="opacity: 0.85;">
+        <span class="navbar-text text-light" id="timer">000</span>
       </div>
-      <button id="start-button" type="button" class="btn btn-success">Start</button>
-      <button id="restart-button" type="button" class="btn btn-success">Restart</button>
+      <button id="start-button" type="button" class="nav-item btn btn-success">Start</button>
+      <button id="restart-button" type="button" class="nav-item btn btn-success">Restart</button>
     </nav>
     <div id="game-grid-container" class="large-grid-easy-level medium-grid-easy-level small-grid-easy-level extra-small-grid-easy-level tiny-small-grid-easy-level">
       

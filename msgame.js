@@ -13,6 +13,8 @@ let main = function (){
     let timer;
 
     let gridIdToCallbackArray = [];
+    let isMobile = window.matchMedia("(max-width: 421px)").matches || window.matchMedia("(max-width: 321px)").matches;
+
 
     $("#button-level-easy").on("click", setLevelToEasy);
 
@@ -271,7 +273,6 @@ let main = function (){
     }
 
     function drawGridStatus(renderingStatusObject) {
-        let isMobile = window.matchMedia("(max-width: 421px)").matches || window.matchMedia("(max-width: 321px)").matches;
         if (isMobile){
             var one = "<h5><span class='badge badge-secondary border'>1</span></h5>";
             var two = "<h5><span class='badge badge-primary border'>2</span></h5>";

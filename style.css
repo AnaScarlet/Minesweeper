@@ -7,10 +7,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
     background-image: url("./trees-background.jpg");
     background-position: center;
+    background-size: contain;
+    padding: 1em 0em;
 }
 
 
@@ -22,7 +25,10 @@ nav {
     border-width: 5px;
     border-radius: 10px;
     border-color: #0e3a18;
-    width: 60%;
+}
+
+.nav-icon {
+    margin-right: 5px;
 }
 
 #game-grid-container {
@@ -34,6 +40,10 @@ nav {
     background-color: #28a745;
     width: fit-content;
     display: grid;
+}
+
+.badge {
+    opacity: 0.8;
 }
 
 .large-grid-easy-level {
@@ -70,6 +80,35 @@ nav {
         max-width: 50px;
         max-height: auto;
     }
+
+    .navbar-brand {
+        height: 2em;
+        margin-right: 1rem !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand img {
+        height: 2em;
+    }
+
+    .navbar .dropdown .dropdown-toggle {
+        height: 2em;
+        font-size: 1em;
+        width: fit-content;
+        padding: 1px 0.5em;
+    }
+
+    .navbar-brand .navbar-text {
+        font-size: 1em;
+        padding: 4px;
+    }
+
+    .navbar .nav-item {
+        height: 2em;
+        font-size: 1em;
+        width: fit-content;
+        padding: 1px 0.5em;
+    }
 }
 
 @media (max-width: 576px) { 
@@ -85,6 +124,38 @@ nav {
     .flag-img {
         max-width: 30px;
         max-height: auto;
+    }
+    .navbar {
+        height: 5em;
+    }
+
+    .navbar-brand {
+        height: 2em;
+        margin-right: 0.8rem !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand img {
+        height: 2em;
+    }
+
+    .navbar .dropdown .dropdown-toggle {
+        height: 2em;
+        font-size: 1em;
+        width: fit-content;
+        padding: 1px 3px;
+    }
+
+    .navbar-brand .navbar-text {
+        font-size: 1em;
+        padding: 4px;
+    }
+
+    .navbar .nav-item {
+        height: 2em;
+        font-size: 1em;
+        width: fit-content;
+        padding: 1px 3px;
     }
 }
 
@@ -111,6 +182,39 @@ nav {
     .flag-img {
         max-width: 20px;
         max-height: auto;
+    }
+
+    .navbar {
+        height: 3em;
+    }
+
+    .navbar-brand {
+        height: 2em;
+        margin-right: 0.8rem !important;
+        padding: 0 !important;
+    }
+
+    .navbar-brand img {
+        height: 1em;
+    }
+
+    .navbar .dropdown .dropdown-toggle {
+        height: 2em;
+        font-size: 0.8em;
+        width: fit-content;
+        padding: 1px 3px;
+    }
+
+    .navbar-brand .navbar-text {
+        font-size: 0.6em;
+        padding: 1px;
+    }
+
+    .navbar .nav-item {
+        height: 2em;
+        font-size: 0.8em;
+        width: fit-content;
+        padding: 1px 3px;
     }
 }
 
